@@ -39,6 +39,8 @@ des_file.write("`endif        \n")
 des_file.write("\n\n")
 
 des_file.write("module bmem (   \n")
+des_file.write("    input wire                                  rst_n,                 \n")
+des_file.write("    input wire                                  clk,                 \n")
 des_file.write("    input wire [`XLEN-1:0]                      if2bmem_addr_i,     // Address from IF  \n")
 des_file.write("    input wire                                  if2bmem_req_i,                 \n")
 des_file.write("    output logic [`XLEN-1:0]                    bmem2if_data_o      // Instruction from boot memory to IF   \n")
@@ -47,19 +49,22 @@ des_file.write(");                                                              
 des_file.write("localparam BMEM_SIZE          = "+str(line_count)+";   // Memory size is in words \n\
 localparam BMEM_ADDR_BUS_SIZE = $clog2(BMEM_SIZE); \n\n")
 
-des_file.write("logic [BMEM_ADDR_BUS_SIZE-1:0]         if2bmem_addr;     \n \n\
-assign if2bmem_addr = if2bmem_addr_i[BMEM_ADDR_BUS_SIZE+1:2];                                   \n \n\
-const logic [`XLEN-1:0] bmem [BMEM_SIZE] = '{                                \n")
+des_file.write("\
+logic [BMEM_ADDR_BUS_SIZE-1:0]         if2bmem_addr;            \n \n\
+logic [`XLEN-1:0]                      r_data;                  \n \n\
+assign if2bmem_addr = if2bmem_addr_i[BMEM_ADDR_BUS_SIZE+1:2];   \n \n\
+always @ (posedge clk) begin                                    \n \n\
+    case(if2bmem_addr) \n")
 
 for src_line in inst_data:
+    des_file.write(" "*8+"9'd"+str(index)+": r_data <= 32'h"+src_line[0:8]+";"+"\n")
     index+=1
-    if index < line_count:
-        des_file.write(" "*4+"32'h"+src_line[0:8]+","+ "\n")
-    else:
-        des_file.write(" "*4+"32'h"+src_line[0:8]+ "\n" +"};" + "\n\n") 
-    
 
-des_file.write("assign bmem2if_data_o = if2bmem_req_i ? bmem[if2bmem_addr] : '0; \n\n\
+des_file.write("\
+        default: r_data <= 32'h00000000;    \n \
+    endcase                                 \n \
+end                                         \n\n \
+assign bmem2if_data_o = rdata; \n\n\
 endmodule : bmem ")
 
 des_file.close()

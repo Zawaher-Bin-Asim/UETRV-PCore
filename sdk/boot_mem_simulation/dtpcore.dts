@@ -21,6 +21,7 @@
 			L1: interrupt-controller {
                              //   #address-cells = <1>;
 				#interrupt-cells = <1>;
+				#address-cells = <0>;
 				interrupt-controller;
 				compatible = "riscv,cpu-intc";
 			};
@@ -56,6 +57,7 @@
 			compatible = "sifive,plic-1.0.0"; // , "riscv,plic0"
 			reg = <0x94000000 0x1000000>;
 			interrupts-extended = <&L1 11 &L1 9>; 
+			#address-cells = <0>;
 			riscv,ndev = <2>;
 		}; 
                 
@@ -69,8 +71,20 @@
       			reg-shift = <2>;    // regs are spaced on 32 bit boundary
       			reg-io-width = <4>; // only 32-bit access are supported
                         clocks = <&refclk>;
-    		}; 
-		
+    		};
+
+				SPI0: spi@9c000000 {
+			    compatible = "sifive,spi0";
+			    reg = <0x9c000000 0x1000>;
+			    interrupt-parent = <&PLIC0>;  // Refers to the PLIC node correctly
+			    interrupts = <51>;  // Only one cell since #interrupt-cells = <1>
+			    clocks = <&refclk>;
+			    #address-cells = <1>;
+			    #size-cells = <0>;
+			    sifive,fifo-depth = <8>;
+			    sifive,max-bits-per-word = <8>;
+			};
+ 
 	}; 
 	
       
