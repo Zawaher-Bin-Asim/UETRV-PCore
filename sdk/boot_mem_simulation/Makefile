@@ -10,7 +10,7 @@ PYTHON=python3
 build_sv: $(bmem_sv)
 %.sv: %.txt
 	$(PYTHON) ./make_sv.py $< >> $@
-	cp bmem.sv ../rtl/memory/
+	cp bmem.sv ../../rtl/memory/
 
 build_txt: $(bmem_txt)
 %.txt: %.bin
