@@ -7,7 +7,6 @@
 // Author: Muhammad Tahir, UET Lahore
 // Date: 10.5.2022
 
-
 `ifndef PCORE_CSR_DEFS
 `define PCORE_CSR_DEFS
 
@@ -147,18 +146,18 @@ localparam logic [`XLEN-1:0] SIE_SSIP = MIE_SSIP;
 localparam logic [`XLEN-1:0] SIP_SSIP = SIE_SSIP;
 
 
-localparam int unsigned IRQ_CODE_WIDTH = 4;
+localparam int unsigned IRQ_CODE_WIDTH = 5;
 
 typedef enum logic [IRQ_CODE_WIDTH-1:0] {
-    IRQ_CODE_NONE       = 4'd0,
-    IRQ_CODE_S_SOFTWARE = 4'd1,     // S-mode software IRQ code 
-    IRQ_CODE_M_SOFTWARE = 4'd3,     // M-mode software IRQ code 
-    IRQ_CODE_S_TIMER    = 4'd5,     // S-mode timer IRQ code 
-    IRQ_CODE_M_TIMER    = 4'd7,     // M-mode timer IRQ code
-    IRQ_CODE_S_EXTERNAL = 4'd9,     // S-mode external IRQ code
-    IRQ_CODE_M_EXTERNAL = 4'd11,     // M-mode external IRQ code
-    IRQ_CODE_UART       = 5'd2,    // External UART interrupt
-    IRQ_CODE_SPI        = 5'd4    // External SPI interrupt
+    IRQ_CODE_NONE       = 5'd0,
+    IRQ_CODE_S_SOFTWARE = 5'd1,     // S-mode software IRQ code 
+    IRQ_CODE_M_SOFTWARE = 5'd3,     // M-mode software IRQ code 
+    IRQ_CODE_S_TIMER    = 5'd5,     // S-mode timer IRQ code 
+    IRQ_CODE_M_TIMER    = 5'd7,     // M-mode timer IRQ code
+    IRQ_CODE_S_EXTERNAL = 5'd9,     // S-mode external IRQ code
+    IRQ_CODE_M_EXTERNAL = 5'd11,     // M-mode external IRQ code
+    IRQ_CODE_UART       = 5'd16,    // External UART interrupt
+    IRQ_CODE_SPI        = 5'd17    // External SPI interrupt
 } type_irq_code_e;
 
 //=========================== Register bitfield definitions ==========================//

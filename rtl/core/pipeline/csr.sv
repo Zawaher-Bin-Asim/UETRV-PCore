@@ -632,6 +632,7 @@ always_ff @(negedge rst_n, posedge clk) begin
         priv_mode_ff   <= PRIV_MODE_M;
     end else begin
         csr_mstatus_ff <= csr_mstatus_next;
+        priv_mode_ff   <= priv_mode_next;
     end
 end
 
@@ -920,7 +921,7 @@ end
 always_ff @(negedge rst_n, posedge clk) begin
     if (~rst_n) begin
         csr_mtval_ff <= {`XLEN{1'b0}};
-        priv_mode_ff   <= PRIV_MODE_M; 
+       // priv_mode_ff   <= PRIV_MODE_M; 
     end else begin
         csr_mtval_ff <= csr_mtval_next;
     end
@@ -1200,7 +1201,7 @@ end
 assign meip_irq_req = csr_mip_next.meip & csr_mie_ff.meie;
 assign mtip_irq_req = csr_mip_next.mtip & csr_mie_ff.mtie;
 assign msip_irq_req = csr_mip_next.msip & csr_mie_ff.msie;
-assign uart_irq_req = 0; //csr_mip_ff.uart_ip & csr_mie_ff.uart_ie;
+//assign uart_irq_req = csr_mip_ff.uart_ip & csr_mie_ff.uart_ie;
 assign spi_irq_req  = csr_mip_ff.spi_ip  & csr_mie_ff.spi_ie;
 
 assign seip_irq_req = csr_mip_ff.seip & csr_mie_ff.seie;
