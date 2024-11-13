@@ -156,7 +156,9 @@ typedef enum logic [IRQ_CODE_WIDTH-1:0] {
     IRQ_CODE_S_TIMER    = 4'd5,     // S-mode timer IRQ code 
     IRQ_CODE_M_TIMER    = 4'd7,     // M-mode timer IRQ code
     IRQ_CODE_S_EXTERNAL = 4'd9,     // S-mode external IRQ code
-    IRQ_CODE_M_EXTERNAL = 4'd11     // M-mode external IRQ code
+    IRQ_CODE_M_EXTERNAL = 4'd11,     // M-mode external IRQ code
+    IRQ_CODE_UART       = 5'd2,    // External UART interrupt
+    IRQ_CODE_SPI        = 5'd4    // External SPI interrupt
 } type_irq_code_e;
 
 //=========================== Register bitfield definitions ==========================//
@@ -259,6 +261,8 @@ typedef struct packed {
     logic                       warl1;
     logic                       ssie;    // supervisor level software interrupt enable bit
     logic                       warl0;
+    logic                       uart_ie;
+    logic                       spi_ie;
 } type_mie_reg_s;
 
 typedef struct packed {
@@ -277,6 +281,8 @@ typedef struct packed {
     logic                       warl1;
     logic                       ssip;    // supervisor level software interrupt pending bit
     logic                       warl0;
+    logic                       uart_ip;
+    logic                       spi_ip;
 } type_mip_reg_s;
 
 // Bitfield definitions for supervisor interrupt enable (sie) and supervisor interrupt
