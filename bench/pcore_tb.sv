@@ -64,8 +64,10 @@ initial begin
 end
 
 always_ff@(posedge clk) begin
-  if (dut.uart_module.tx_valid_ff == 1)
+  if (dut.uart_module.tx_valid_ff == 1) begin
     $fwrite(uartlog_filepointer, "%c", dut.uart_module.uart_reg_tx_ff);
+    $write("%c", dut.uart_module.uart_reg_tx_ff);
+  end
 end
 
 `else
