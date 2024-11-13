@@ -18,3 +18,5 @@ transcript
 *_work/
 sim_build/
 __pycache__/
+sdk/example-linux/imem.txt
+mcu_csr.sv
