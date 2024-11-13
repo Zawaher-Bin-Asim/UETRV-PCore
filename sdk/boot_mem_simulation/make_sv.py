@@ -64,7 +64,7 @@ des_file.write("\
         default: r_data <= 32'h00000000;    \n \
     endcase                                 \n \
 end                                         \n\n \
-assign bmem2if_data_o = rdata; \n\n\
+assign bmem2if_data_o = r_data; \n\n\
 endmodule : bmem ")
 
 des_file.close()
