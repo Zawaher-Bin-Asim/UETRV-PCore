@@ -7,7 +7,9 @@
 //
 // Author: Muhammad Tahir, UET Lahore
 // Date: 11.8.2022
+// Updated: 13.11.2024
 
+// this
 
 `timescale 1 ns / 100 ps
 
@@ -170,9 +172,12 @@ logic                            seip_irq_req;
 logic                            stip_irq_req;
 logic                            ssip_irq_req;
 logic                            uart_irq_req;
+logic                            spi_irq_req;
 logic                            timer_irq_ff;
 logic                            ext_irq0_ff, ext_irq1_ff;
-//logic                            irq_accept_flag;
+logic                            uart_irq_ff;
+logic                            spi_irq_ff;
+
 
 // M-mode interrupt/exception related signals
 logic                            m_mode_global_ie;
@@ -627,7 +632,6 @@ always_ff @(negedge rst_n, posedge clk) begin
         priv_mode_ff   <= PRIV_MODE_M;
     end else begin
         csr_mstatus_ff <= csr_mstatus_next;
-        priv_mode_ff   <= priv_mode_next;
     end
 end
 
@@ -861,6 +865,8 @@ always_comb begin
     csr_mip_next.meip = ext_irq0_ff;
     csr_mip_next.seip = ext_irq1_ff;
     csr_mip_next.mtip = timer_irq_ff;
+    csr_mip_next.uart_ip = uart_irq_ff;
+    csr_mip_next.spi_ip  = spi_irq_ff;
     csr_mip_next.msip = '0; // pipe2csr.soft_irq;
 
     if (csr_mip_wr_flag) begin
@@ -876,11 +882,15 @@ always_ff @(negedge rst_n, posedge clk) begin
     if (~rst_n) begin
         ext_irq0_ff  <= 1'b0;
         ext_irq1_ff  <= 1'b0; 
-        timer_irq_ff <= 1'b0; 
+        timer_irq_ff <= 1'b0;
+        uart_irq_ff  <= 1'b0;
+        spi_irq_ff   <= 1'b0;
     end else begin
         ext_irq0_ff  <= pipe2csr.ext_irq[0];
         ext_irq1_ff  <= pipe2csr.ext_irq[1];
         timer_irq_ff <= pipe2csr.timer_irq;
+        uart_irq_ff  <= pipe2csr.uart_irq;
+        spi_irq_ff   <= pipe2csr.spi_irq;
     end
 end
 
@@ -909,7 +919,8 @@ end
 // -----------------------------------------
 always_ff @(negedge rst_n, posedge clk) begin
     if (~rst_n) begin
-        csr_mtval_ff <= {`XLEN{1'b0}}; 
+        csr_mtval_ff <= {`XLEN{1'b0}};
+        priv_mode_ff   <= PRIV_MODE_M; 
     end else begin
         csr_mtval_ff <= csr_mtval_next;
     end
@@ -1189,15 +1200,16 @@ end
 assign meip_irq_req = csr_mip_next.meip & csr_mie_ff.meie;
 assign mtip_irq_req = csr_mip_next.mtip & csr_mie_ff.mtie;
 assign msip_irq_req = csr_mip_next.msip & csr_mie_ff.msie;
-// assign uart_irq_req = csr_mip_ff.uart & csr_mie_ff.uart;
+assign uart_irq_req = 0; //csr_mip_ff.uart_ip & csr_mie_ff.uart_ie;
+assign spi_irq_req  = csr_mip_ff.spi_ip  & csr_mie_ff.spi_ie;
 
 assign seip_irq_req = csr_mip_ff.seip & csr_mie_ff.seie;
 assign stip_irq_req = csr_mip_ff.stip & csr_mie_ff.stie;
 assign ssip_irq_req = csr_mip_ff.ssip & csr_mie_ff.ssie;
 
-assign m_irq_req = meip_irq_req | mtip_irq_req | msip_irq_req;
-assign s_irq_req = seip_irq_req | stip_irq_req | ssip_irq_req;
-assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req;  // m_irq_req
+assign m_irq_req = meip_irq_req | mtip_irq_req | msip_irq_req | uart_irq_req | spi_irq_req;
+assign s_irq_req = seip_irq_req | stip_irq_req | ssip_irq_req | uart_irq_req | spi_irq_req;
+assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | uart_irq_req | spi_irq_req;  // m_irq_req
 
 // IRQ codes for cause register 
 always_comb begin
@@ -1208,6 +1220,8 @@ always_comb begin
         mtip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_TIMER);
         seip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_EXTERNAL);
         ssip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_SOFTWARE);
+        uart_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_UART);
+        spi_irq_req : irq_code = type_irq_code_e'(IRQ_CODE_SPI );
         stip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_TIMER);
     endcase
 end
