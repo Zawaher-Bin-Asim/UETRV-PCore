@@ -9,8 +9,6 @@
 // Date: 11.8.2022
 // Updated: 13.11.2024
 
-// this
-
 `timescale 1 ns / 100 ps
 
 `ifndef VERILATOR
@@ -866,8 +864,8 @@ always_comb begin
     csr_mip_next.meip = ext_irq0_ff;
     csr_mip_next.seip = ext_irq1_ff;
     csr_mip_next.mtip = timer_irq_ff;
-    csr_mip_next.uart_ip = uart_irq_ff;
-    csr_mip_next.spi_ip  = spi_irq_ff;
+    csr_mip_next.uart = uart_irq_ff;
+    csr_mip_next.spi  = spi_irq_ff;
     csr_mip_next.msip = '0; // pipe2csr.soft_irq;
 
     if (csr_mip_wr_flag) begin
@@ -1201,8 +1199,9 @@ end
 assign meip_irq_req = csr_mip_next.meip & csr_mie_ff.meie;
 assign mtip_irq_req = csr_mip_next.mtip & csr_mie_ff.mtie;
 assign msip_irq_req = csr_mip_next.msip & csr_mie_ff.msie;
-//assign uart_irq_req = csr_mip_ff.uart_ip & csr_mie_ff.uart_ie;
-assign spi_irq_req  = csr_mip_ff.spi_ip  & csr_mie_ff.spi_ie;
+//assign uart_irq_req = csr_mip_ff.uart & csr_mie_ff.uart;
+assign spi_irq_req  = csr_mip_ff.spi  & csr_mie_ff.spi;
+always_comb if (csr_mip_ff.spi) $write("\nCSR_SPI_IP: %d, CSR_SPI_IE: %d\n", csr_mip_ff.spi, csr_mie_ff.spi);
 
 assign seip_irq_req = csr_mip_ff.seip & csr_mie_ff.seie;
 assign stip_irq_req = csr_mip_ff.stip & csr_mie_ff.stie;
@@ -1215,14 +1214,14 @@ assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | uart_irq_req | spi_irq_req
 // IRQ codes for cause register 
 always_comb begin
     irq_code = type_irq_code_e'(IRQ_CODE_NONE);
-    case (irq_code)
+    case (1'b1)
         meip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_EXTERNAL);
         msip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_SOFTWARE);
         mtip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_TIMER);
         seip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_EXTERNAL);
         ssip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_SOFTWARE);
         uart_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_UART);
-        spi_irq_req : irq_code = type_irq_code_e'(IRQ_CODE_SPI );
+        spi_irq_req : begin irq_code = type_irq_code_e'(IRQ_CODE_SPI); $write("\n\nspi_irq_req=1, irq_code = %d\n\n", irq_code); end
         stip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_TIMER);
     endcase
 end

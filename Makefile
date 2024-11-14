@@ -63,7 +63,6 @@ sim-verilate-linux: verilate
 	@echo
 #	rm -f ./sdk/example-linux/imem.txt
 #	unzip ./sdk/example-linux/imem.zip -d ./sdk/example-linux/
-	cp /root/Linux_boot_UETRV_PCore/imem.txt  sdk/example-linux/imem.txt
 	@echo
 	@echo
 	@echo "Output is captured in uart_logdata.log"
