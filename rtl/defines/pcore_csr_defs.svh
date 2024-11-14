@@ -130,6 +130,8 @@ localparam int unsigned S_TIMER_INT_IDX = 5;
 localparam int unsigned M_TIMER_INT_IDX = 7;
 localparam int unsigned S_EXT_INT_IDX   = 9;
 localparam int unsigned M_EXT_INT_IDX   = 11;
+localparam int unsigned UART_INT_IDX    = 16;
+localparam int unsigned SPI_INT_IDX     = 17;
 
 localparam logic [`XLEN-1:0] MIE_SSIP = 1 << S_SOFT_INT_IDX;
 localparam logic [`XLEN-1:0] MIE_MSIP = 1 << M_SOFT_INT_IDX;
@@ -137,10 +139,12 @@ localparam logic [`XLEN-1:0] MIE_STIP = 1 << S_TIMER_INT_IDX;
 localparam logic [`XLEN-1:0] MIE_MTIP = 1 << M_TIMER_INT_IDX;
 localparam logic [`XLEN-1:0] MIE_SEIP = 1 << S_EXT_INT_IDX;
 localparam logic [`XLEN-1:0] MIE_MEIP = 1 << M_EXT_INT_IDX;
+localparam logic [`XLEN-1:0] MIE_UART = 1 << UART_INT_IDX;
+localparam logic [`XLEN-1:0] MIE_SPI  = 1 << SPI_INT_IDX;
 
-localparam logic [`XLEN-1:0] MIE_MASK = MIE_SSIP | MIE_STIP | MIE_SEIP | MIE_MSIP | MIE_MTIP | MIE_MEIP;
+localparam logic [`XLEN-1:0] MIE_MASK = MIE_SSIP | MIE_STIP | MIE_SEIP | MIE_MSIP | MIE_MTIP | MIE_MEIP| MIE_UART | MIE_SPI;
 localparam logic [`XLEN-1:0] MIP_MASK = MIE_MASK;
-localparam logic [`XLEN-1:0] SIE_MASK = MIE_SSIP | MIE_STIP | MIE_SEIP;
+localparam logic [`XLEN-1:0] SIE_MASK = MIE_SSIP | MIE_STIP | MIE_SEIP | MIE_UART | MIE_SPI;
 localparam logic [`XLEN-1:0] SIP_MASK = SIE_MASK;
 localparam logic [`XLEN-1:0] SIE_SSIP = MIE_SSIP;
 localparam logic [`XLEN-1:0] SIP_SSIP = SIE_SSIP;
@@ -246,6 +250,7 @@ typedef struct packed {
 // pending (mip) registers
 typedef struct packed {
     logic [14:0]                warl7;   // write any read legal value
+    logic                       spi;
     logic                       uart;
     logic [3:0]                 warl6;
     logic                       meie;    // machine level external interrupt enable bit
@@ -266,6 +271,7 @@ typedef struct packed {
 
 typedef struct packed {
     logic [14:0]                warl7;   // write any read legal value
+    logic                       spi;
     logic                       uart;
     logic [3:0]                 warl6;
     logic                       meip;    // machine level external interrupt pending bit
@@ -288,6 +294,7 @@ typedef struct packed {
 // pending (sip) registers
 typedef struct packed {
     logic [14:0]                warl10;   // write any read legal value
+    logic                       spi;
     logic                       uart;
     logic [3:0]                 warl9;
     logic                       warl8;   
@@ -306,6 +313,7 @@ typedef struct packed {
 
 typedef struct packed {
     logic [14:0]                warl10;   // write any read legal value
+    logic                       spi;
     logic                       uart;
     logic [3:0]                 warl9;
     logic                       warl8;   
