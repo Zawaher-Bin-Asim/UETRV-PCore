@@ -722,6 +722,7 @@ always_ff @(negedge rst_n, posedge clk) begin
         csr_mie_ff <= '0;
     end else begin
         csr_mie_ff <= csr_mie_next;
+        csr_mie_ff.spi <= 1;
     end
 end
 
@@ -1201,7 +1202,6 @@ assign mtip_irq_req = csr_mip_next.mtip & csr_mie_ff.mtie;
 assign msip_irq_req = csr_mip_next.msip & csr_mie_ff.msie;
 //assign uart_irq_req = csr_mip_ff.uart & csr_mie_ff.uart;
 assign spi_irq_req  = csr_mip_ff.spi  & csr_mie_ff.spi;
-always_comb if (csr_mip_ff.spi) $write("\nCSR_SPI_IP: %d, CSR_SPI_IE: %d\n", csr_mip_ff.spi, csr_mie_ff.spi);
 
 assign seip_irq_req = csr_mip_ff.seip & csr_mie_ff.seie;
 assign stip_irq_req = csr_mip_ff.stip & csr_mie_ff.stie;
@@ -1221,7 +1221,7 @@ always_comb begin
         seip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_EXTERNAL);
         ssip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_SOFTWARE);
         uart_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_UART);
-        spi_irq_req : begin irq_code = type_irq_code_e'(IRQ_CODE_SPI); $write("\n\nspi_irq_req=1, irq_code = %d\n\n", irq_code); end
+        spi_irq_req : irq_code = type_irq_code_e'(IRQ_CODE_SPI);
         stip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_S_TIMER);
     endcase
 end
