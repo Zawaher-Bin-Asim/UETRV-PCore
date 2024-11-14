@@ -13,7 +13,7 @@ defines     ?=
 # default command line arguments
 imem_uart  ?= sdk/example-uart/build/hello.hex
 imem_linux ?= sdk/example-linux/imem.txt
-max_cycles ?= 100000000
+max_cycles ?= 500000000
 vcd        ?= 0
 
 uartbuild_root := sdk/example-uart/build/
@@ -61,8 +61,9 @@ sim-verilate-linux: verilate
 	@echo
 	@echo "Extracting Linux Image..."
 	@echo
-	rm -f ./sdk/example-linux/imem.txt
-	unzip ./sdk/example-linux/imem.zip -d ./sdk/example-linux/
+#	rm -f ./sdk/example-linux/imem.txt
+#	unzip ./sdk/example-linux/imem.zip -d ./sdk/example-linux/
+	cp /root/Linux_boot_UETRV_PCore/imem.txt  sdk/example-linux/imem.txt
 	@echo
 	@echo
 	@echo "Output is captured in uart_logdata.log"
@@ -70,7 +71,7 @@ sim-verilate-linux: verilate
 	@echo
 	@echo "Initiating Linux Bootup in Verilator Simulation..."
 	@echo
-	$(ver-library)/Vpcore_tb +imem=$(imem_linux) +max_cycles=300000000 +vcd=$(vcd)
+	$(ver-library)/Vpcore_tb +imem=$(imem_linux) +max_cycles=$(max_cycles) +vcd=$(vcd)
 
 clean-all:
 	rm -rf ver_work/ *.log *.vcd \

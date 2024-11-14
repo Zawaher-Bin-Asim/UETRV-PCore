@@ -1215,7 +1215,7 @@ assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | uart_irq_req | spi_irq_req
 // IRQ codes for cause register 
 always_comb begin
     irq_code = type_irq_code_e'(IRQ_CODE_NONE);
-    case (1'b1)
+    case (irq_code)
         meip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_EXTERNAL);
         msip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_SOFTWARE);
         mtip_irq_req: irq_code = type_irq_code_e'(IRQ_CODE_M_TIMER);
