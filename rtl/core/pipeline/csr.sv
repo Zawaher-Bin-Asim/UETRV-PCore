@@ -1201,7 +1201,7 @@ assign mtip_irq_req = csr_mip_next.mtip & csr_mie_ff.mtie;
 assign msip_irq_req = csr_mip_next.msip & csr_mie_ff.msie;
 //assign uart_irq_req = csr_mip_ff.uart & csr_mie_ff.uart;
 assign spi_irq_req  = csr_mip_ff.spi  & csr_mie_ff.spi;
-always_comb if (csr_mip_ff.spi) $write("\nCSR_SPI_IP: %d, CSR_SPI_IE: %d\n", csr_mip_ff.spi, csr_mie_ff.spi);
+always_comb if (csr_mip_ff.spi) $write("\nCSR_SPI_IP: %d, CSR_SPI_IE: %d, CSR_MIE_FF: %x, csr_wdata: %x\n", csr_mip_ff.spi, csr_mie_ff.spi, csr_mie_ff, csr_wdata);
 
 assign seip_irq_req = csr_mip_ff.seip & csr_mie_ff.seie;
 assign stip_irq_req = csr_mip_ff.stip & csr_mie_ff.stie;
@@ -1209,7 +1209,7 @@ assign ssip_irq_req = csr_mip_ff.ssip & csr_mie_ff.ssie;
 
 assign m_irq_req = meip_irq_req | mtip_irq_req | msip_irq_req | uart_irq_req | spi_irq_req;
 assign s_irq_req = seip_irq_req | stip_irq_req | ssip_irq_req | uart_irq_req | spi_irq_req;
-assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | uart_irq_req | spi_irq_req;  // m_irq_req
+assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req;  // m_irq_req
 
 // IRQ codes for cause register 
 always_comb begin
