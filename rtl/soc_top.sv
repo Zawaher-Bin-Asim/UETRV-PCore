@@ -34,7 +34,7 @@ module soc_top (
     // SPI interface signals
     // SPI bus interface signals including clock, chip_select, MOSI and MISO  
     output logic                         spi_clk_o,
-    output logic                         spi_cs_o,
+    output logic [1:0]                   spi_cs_o,
     input logic                          spi_miso_i,
     output logic                         spi_mosi_o,
 
@@ -258,7 +258,7 @@ spi_top spi_top_module (
 
     .spi_clk_o             (spi_clk_o),
     .spi_cs_o              (spi_cs_o),
-    .spi_miso_i            (spi_mosi_o),
+    .spi_miso_i            (spi_miso_i),
     .spi_mosi_o            (spi_mosi_o)
 );
 

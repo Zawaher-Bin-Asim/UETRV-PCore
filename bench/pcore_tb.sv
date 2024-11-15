@@ -7,7 +7,8 @@ reg                       irq_ext;
 reg                       irq_soft;
 reg                       uart_rx;
 wire                      uart_tx;
-logic                     spi_clk, spi_cs, spi_mosi, spi_miso;
+logic                     spi_clk, spi_mosi, spi_miso;
+logic [1:0]               spi_cs;
 reg [1023:0]              firmware;
 reg [1023:0]              max_cycles;
 reg [1023:0]              main_time = '0;
@@ -21,7 +22,7 @@ soc_top dut (
   .uart_txd_o              (uart_tx),
   .spi_clk_o               (spi_clk),
   .spi_cs_o                (spi_cs),
-  .spi_miso_i              (spi_miso),
+  .spi_miso_i              (spi_mosi),
   .spi_mosi_o              (spi_mosi)
 ); 
 
@@ -67,6 +68,29 @@ always_ff@(posedge clk) begin
   if (dut.uart_module.tx_valid_ff == 1) begin
     $fwrite(uartlog_filepointer, "%c", dut.uart_module.uart_reg_tx_ff);
     $write("%c", dut.uart_module.uart_reg_tx_ff);
+  end
+end
+
+// ====================== SPI logs ========================== //
+integer     spi_wlog_filepointer;
+integer     i;
+logic [7:0] spi_wdata;
+
+initial begin
+  spi_wlog_filepointer = $fopen("sdk/example-spi/spi_wdata.log", "w");
+  i=0;
+  spi_wdata = 8'b0;
+end
+
+always_ff@(negedge spi_clk) begin
+  if (spi_cs[0] == 0) begin
+    spi_wdata = {spi_wdata[6:0], spi_mosi};
+    i++;
+    if (i==8) begin
+      $fwrite(spi_wlog_filepointer, "%c", spi_wdata);
+      i=0;
+      spi_wdata = 8'b0;
+    end
   end
 end
 
