@@ -1209,7 +1209,7 @@ assign ssip_irq_req = csr_mip_ff.ssip & csr_mie_ff.ssie;
 
 assign m_irq_req = meip_irq_req | mtip_irq_req | msip_irq_req | uart_irq_req | spi_irq_req;
 assign s_irq_req = seip_irq_req | stip_irq_req | ssip_irq_req | uart_irq_req | spi_irq_req;
-assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | uart_irq_req | spi_irq_req;  // m_irq_req
+assign irq_req   = exe2csr_ctrl.irq_req | s_irq_req | m_irq_req;
 
 // IRQ codes for cause register 
 always_comb begin

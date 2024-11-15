@@ -258,7 +258,7 @@ spi_top spi_top_module (
 
     .spi_clk_o             (spi_clk_o),
     .spi_cs_o              (spi_cs_o),
-    .spi_miso_i            (spi_miso_i),
+    .spi_miso_i            (spi_mosi_o),
     .spi_mosi_o            (spi_mosi_o)
 );
 
