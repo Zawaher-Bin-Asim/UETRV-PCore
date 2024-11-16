@@ -87,7 +87,8 @@ always_ff@(negedge spi_clk) begin
     spi_wdata = {spi_wdata[6:0], spi_mosi};
     i++;
     if (i==8) begin
-      $fwrite(spi_wlog_filepointer, "%c", spi_wdata);
+      if (spi_wdata != 8'h00)
+        $fwrite(spi_wlog_filepointer, "%c", spi_wdata);
       i=0;
       spi_wdata = 8'b0;
     end
