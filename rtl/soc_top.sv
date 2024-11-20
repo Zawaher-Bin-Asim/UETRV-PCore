@@ -102,7 +102,7 @@ logic                                   irq_ns_uart;
 logic                                   irq_spi;
 
 logic                                   irq_clint_timer;
-logic                                   irq_plic_target_0, irq_plic_target_1;
+logic                                   irq_plic_target_0, irq_plic_target_1, irq_plic_target_2;
 
 // Interfaces for different peripheral modules (for read mux)
 type_peri2dbus_s                        dcache2dbus;              // Signals from data memory 
@@ -115,7 +115,7 @@ type_peri2dbus_s                        spi2dbus;
 
 // Input assignment to local signals
 assign core2pipe.csr_mhartid = `CSR_MHARTID;
-assign core2pipe.ext_irq     = {irq_plic_target_1, irq_plic_target_0};
+assign core2pipe.ext_irq     = {irq_plic_target_2 ,irq_plic_target_1, irq_plic_target_0};
 assign core2pipe.timer_irq   = irq_clint_timer;
 assign core2pipe.soft_irq    = irq_soft_i;
 assign core2pipe.uart_irq    = '0; // irq_uart
@@ -212,9 +212,9 @@ plic_top plic_top_module (
     .dbus2plic_i           (dbus2peri),  // This should be updated if the bus interface is updated
     .plic_sel_i            (plic_sel),
     .plic2dbus_o           (plic2dbus),
-    .edge_select_i         (PLIC_SOURCE_COUNT'(0)),
-    .irq_src_i             ({'0, irq_uart}),
-    .irq_targets_o         ({irq_plic_target_1, irq_plic_target_0})
+    .edge_select_i         (3'd6),
+    .irq_src_i             ({'0, irq_uart, irq_spi}),
+    .irq_targets_o         ({irq_plic_target_2,irq_plic_target_1, irq_plic_target_0})
 );
 
 

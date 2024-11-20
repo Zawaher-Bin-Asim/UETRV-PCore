@@ -83,11 +83,14 @@ always_comb begin
             24'h000000: reg_r_data[PLIC_PRIO_WIDTH-1:0] = '0;                        // IRQ 0 is reserved
             24'h000004: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_ff[0][PLIC_PRIO_WIDTH-1:0];
             24'h000008: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_ff[1][PLIC_PRIO_WIDTH-1:0];
+            24'h00000c: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_ff[2][PLIC_PRIO_WIDTH-1:0];
             24'h001000: reg_r_data[PLIC_SOURCE_COUNT:0] = {plic_reg_irq_pending[PLIC_SOURCE_COUNT-1:0], 1'b0};
             24'h002000: reg_r_data[PLIC_SOURCE_COUNT:0] = {plic_reg_ie_ff[0][PLIC_SOURCE_COUNT-1:0], 1'b0};
             24'h002080: reg_r_data[PLIC_SOURCE_COUNT:0] = {plic_reg_ie_ff[1][PLIC_SOURCE_COUNT-1:0], 1'b0};
+            24'h002100: reg_r_data[PLIC_SOURCE_COUNT:0] = {plic_reg_ie_ff[2][PLIC_SOURCE_COUNT-1:0], 1'b0};
             24'h200000: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_th_ff[0][PLIC_PRIO_WIDTH-1:0];
             24'h201000: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_th_ff[1][PLIC_PRIO_WIDTH-1:0];
+            24'h202000: reg_r_data[PLIC_PRIO_WIDTH-1:0] = plic_reg_prio_th_ff[2][PLIC_PRIO_WIDTH-1:0];
             24'h200004: begin
                 reg_r_data[PLIC_SOURCE_WIDTH-1:0] = claim_idx[0][PLIC_SOURCE_WIDTH-1:0];
                 claim_req[0] = 1'b1;
@@ -95,6 +98,10 @@ always_comb begin
             24'h201004: begin
                 reg_r_data[PLIC_SOURCE_WIDTH-1:0] = claim_idx_i[1][PLIC_SOURCE_WIDTH-1:0];
                 claim_req[1] = 1'b1;
+            end
+            24'h202004: begin
+                reg_r_data[PLIC_SOURCE_WIDTH-1:0] = claim_idx_i[2][PLIC_SOURCE_WIDTH-1:0];
+                claim_req[2] = 1'b1;
             end
             default    :        ;                 // Should not get here
       endcase
@@ -116,10 +123,13 @@ always_comb begin
         24'h000000:                              ; // IRQ 0 is reserved
         24'h000004: prio_reg_wr_flag[0]    = 1'b1;
         24'h000008: prio_reg_wr_flag[1]    = 1'b1;
+        24'h00000c: prio_reg_wr_flag[2]    = 1'b1;
         24'h002000: ie_reg_wr_flag[0]      = 1'b1;
         24'h002080: ie_reg_wr_flag[1]      = 1'b1;
+        24'h002100: ie_reg_wr_flag[2]      = 1'b1;
         24'h200000: prio_th_reg_wr_flag[0] = 1'b1;
         24'h201000: prio_th_reg_wr_flag[1] = 1'b1;
+        24'h202000: prio_th_reg_wr_flag[2] = 1'b1;
         24'h200004: begin
           complete_idx[0][PLIC_SOURCE_WIDTH-1:0] = reg_w_data[PLIC_SOURCE_WIDTH-1:0];
           complete_req[0] = 1'b1;
@@ -127,6 +137,10 @@ always_comb begin
         24'h201004: begin
           complete_idx[1][PLIC_SOURCE_WIDTH-1:0] = reg_w_data[PLIC_SOURCE_WIDTH-1:0];
           complete_req[1] = 1'b1;
+        end
+        24'h202004: begin
+          complete_idx[2][PLIC_SOURCE_WIDTH-1:0] = reg_w_data[PLIC_SOURCE_WIDTH-1:0];
+          complete_req[2] = 1'b1;
         end
         default:     ;   // Should not end up here
       endcase

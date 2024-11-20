@@ -13,8 +13,8 @@
 
 `include "pcore_interface_defs.svh"
 
-parameter int PLIC_SOURCE_COUNT = 2;
-parameter int PLIC_TARGET_COUNT = 2;
+parameter int PLIC_SOURCE_COUNT = 3;
+parameter int PLIC_TARGET_COUNT = 3;
 
 parameter int PLIC_PRIO_LEVELS  = 7;
 parameter int PLIC_SOURCE_WIDTH = $clog2(PLIC_SOURCE_COUNT + 1);
@@ -23,13 +23,17 @@ parameter int PLIC_PRIO_WIDTH   = $clog2(PLIC_PRIO_LEVELS + 1);
 typedef enum logic [23:0] {
     PLIC_PRIORITY_OFFSET_R  = 24'h000000,
     PLIC_PRIORITY_OFFSET2_R = 24'h000004,
+    PLIC_PRIORITY_OFFSET3_R = 24'h000008,
     PLIC_IP_OFFSET_R        = 24'h001000,
     PLIC_IE_OFFSET1_R       = 24'h002000,
     PLIC_IE_OFFSET2_R       = 24'h002080,
+    PLIC_IE_OFFSET3_R       = 24'h002100,
     PLIC_PRIOR_TH_OFFSET1_R = 24'h200000,
     PLIC_CLAIM_COMPLETE1_R  = 24'h200004,
     PLIC_PRIOR_TH_OFFSET2_R = 24'h201000,
     PLIC_CLAIM_COMPLETE2_R  = 24'h201004
+    PLIC_PRIOR_TH_OFFSET3_R = 24'h202000,
+    PLIC_CLAIM_COMPLETE3_R  = 24'h202004
 } type_plic_regs_e;
 
 
