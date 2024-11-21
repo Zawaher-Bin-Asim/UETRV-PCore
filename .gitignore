@@ -19,3 +19,4 @@ transcript
 sim_build/
 __pycache__/
 mcu_csr.sv
+sdk/boot_mem_simulation/bmem.txt

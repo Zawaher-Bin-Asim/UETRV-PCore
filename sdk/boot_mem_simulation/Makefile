@@ -9,12 +9,12 @@ PYTHON=python3
 
 build_sv: $(bmem_sv)
 %.sv: %.txt
-	$(PYTHON) ./make_sv.py $< >> $@
+	$(PYTHON) ./make_sv.py $< > $@
 	cp bmem.sv ../../rtl/memory/
 
 build_txt: $(bmem_txt)
 %.txt: %.bin
-	$(PYTHON) ./make_txt.py $< >> $@
+	$(PYTHON) ./make_txt.py $< > $@
 
 %.bin: %.elf
 	$(RISCV_OBJCOPY) -O binary $< $@
