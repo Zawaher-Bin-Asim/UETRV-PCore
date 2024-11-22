@@ -61,11 +61,12 @@ sim-verilate-linux: verilate
 	@echo
 	@echo "Extracting Linux Image..."
 	@echo
-#	rm -f ./sdk/example-linux/imem.txt
-#	unzip ./sdk/example-linux/imem.zip -d ./sdk/example-linux/
+	rm -f ./sdk/example-linux/imem.txt
+	unzip ./sdk/example-linux/imem.zip -d ./sdk/example-linux/
 	@echo
 	@echo
 	@echo "Output is captured in uart_logdata.log"
+	@echo "SPI0 output is captured in sdk/example-spi/spi_wdata.log"
 	@echo "Press ctrl+c to exit to the simulation"
 	@echo
 	@echo "Initiating Linux Bootup in Verilator Simulation..."
